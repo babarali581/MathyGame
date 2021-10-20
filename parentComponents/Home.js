@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         border: "4px solid black",
         justifyContent: 'center',
-      alignItems: 'center'
+        alignItems: 'center'
     }
 
 

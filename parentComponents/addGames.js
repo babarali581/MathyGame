@@ -7,7 +7,7 @@
  */
 
  import React, {useState, useEffect} from 'react';
- import {View, StyleSheet, Text} from 'react-native';
+ import {View, StyleSheet, Text , TouchableOpacity} from 'react-native';
  import {RandomNumber} from '../helpers/randomNumber';
  // import Timer from '../childComponents/Timer'
  import {changeOptionsStructure} from '../helpers/changeOptionsStructure';
@@ -30,7 +30,7 @@
    const [wrongAnswer, setWrongAnswer] = useState(0);
    const [seconds, setSeconds] = useState(10);
    const [until, setUntil] = useState(null);
-   const [timeOut, setTimeOut] = useState(false);
+   const [finishTime, setFinishTime] = useState(false);
  
    useEffect(() => {
      if (options === null) {
@@ -59,6 +59,7 @@
    });
  
    const changeState = () => {
+       console.log('until ==> ', until);
      if (until == 10) {
        setUntil(9);
      } else {
@@ -90,13 +91,19 @@
      setOptions(unFlatten);
    };
    const afterFinishCounter = () => {
-     console.log('here after finish counter bab');
+   console.log("inside after finish time");
+    // setFinishTime(true);
+    // selectAnswer(null , null)
  
-     //setTimeOut(true);
-     selectAnswer(null , null)
- 
-     // setUntil(0)
    };
+   const startAgain = () => {
+    setSelectedIndex(null);
+    setFirstNum(null);
+    setSecondNum(null);
+    setOptions(null);
+    setFinishTime(false)
+    changeState()
+   }
    let sign = '';
    if (type === 'ADD') {
      sign = '+';
@@ -108,7 +115,7 @@
      sign = '/';
    }
  
-   console.log('until ============>>>', until);
+
    return (
      // firstNum &&
      // secondNum && (
@@ -120,9 +127,8 @@
          <CountDown
            until={until === null ? 10 : until == 9 ? 9 : 10}
            size={20}
-           // until={10}
-           onFinish={() => afterFinishCounter} //selectAnswer(null , null) }
-           //  onPress={() => alert('hello')}
+           //until={0}
+           onFinish={() => afterFinishCounter() }   //selectAnswer(null , null)
  
            digitStyle={{backgroundColor: '#FFF'}}
            digitTxtStyle={{color: '#1CC625'}}
@@ -131,8 +137,11 @@
            // running= {checkRun}
          />
        </View>
-       {timeOut ? (
-         <Text> TIME OUT </Text>
+       {finishTime ? (
+        <View style={styles.TryAgainContainer}>
+         <Text style={styles.TimeOutText}> TIME OUT </Text>
+         <TouchableOpacity onPress={((e)=>startAgain())}><Text style={styles.TryAgainText}>Try Again </Text></TouchableOpacity>
+         </View>
        ) : (
          <View>
            <View style={styles.rightWrong}>
@@ -148,41 +157,52 @@
  
            {options &&
              options.map((twoValues, i) => {
+              
                return (
-                 <View key={i} style={styles.mainText}>
+                 <View key={i} style={{...styles.mainText}}>
                    {twoValues.map((each, j) => {
                      if (selectedIndex === `${i}${j}`) {
                        if (correctAnswer === each) {
                          return (
-                           <View key={j} style={styles.correctAnswer}>
+                           <TouchableOpacity key={j} style={styles.correctAnswer}
+                           onPress={() => selectAnswer(`${i}${j}`, each)}
+
+                           >
                              <Text
                                style={styles.textToCenter}
-                               onPress={() => selectAnswer(`${i}${j}`, each)}>
-                               {' '}
+                            //   onPress={() => selectAnswer(`${i}${j}`, each)}
+                            >
                                {each}
                              </Text>
-                           </View>
+                           </TouchableOpacity>
                          );
                        } else {
                          return (
-                           <View key={j} style={styles.wrongAnswer}>
+                           <TouchableOpacity key={j} style={styles.wrongAnswer}
+                           onPress={() => selectAnswer(`${i}${j}`, each)}
+ 
+                           >
                              <Text
                                style={styles.textToCenter}
-                               onPress={() => selectAnswer(`${i}${j}`, each)}>
+                               >
                                {each}
                              </Text>
-                           </View>
+                           </TouchableOpacity>
                          );
                        }
                      } else {
                        return (
-                         <View key={j} style={styles.halfDiv}>
+                         <TouchableOpacity key={j} style={styles.halfDiv}
+                         onPress={() => selectAnswer(`${i}${j}`, each)}
+
+                         >
                            <Text
                              style={styles.textToCenter}
-                             onPress={() => selectAnswer(`${i}${j}`, each)}>
+                             //onPress={() => selectAnswer(`${i}${j}`, each)}
+                             >
                              {each}
                            </Text>
-                         </View>
+                         </TouchableOpacity>
                        );
                      }
                    })}
@@ -219,6 +239,7 @@
      flexDirection: 'row',
      borderWidth: 1,
      display: 'flex',
+     height: '20%',
    },
    halfDiv: {
      width: '50%',
@@ -280,6 +301,22 @@
      color: 'white',
      fontSize: 22,
    },
+   TryAgainContainer: {
+    backgroundColor: "lightblue",
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  TimeOutText: {
+    fontSize: 40,
+    fontWeight: "bold"
+  },
+  TryAgainText: {
+    fontSize: 30,
+    fontWeight: "bold"
+  }
  });
  
  export default App;
