@@ -6,7 +6,7 @@ export function changeOptionsStructure(rightAnswer){
 
     let getRandomNum = RandomNumber(1, 4);
 
-    let fourOptions = getFourOptions();
+    let fourOptions = getFourOptions(rightAnswer);
 
     let finalArray = [];
 
@@ -18,7 +18,6 @@ export function changeOptionsStructure(rightAnswer){
       }
     }
 
-    //unflatten array
 
     let unFlatten = [];
     finalArray.reduce((acc, e, i) => {

@@ -9,15 +9,11 @@
  import React, {useState, useEffect} from 'react';
  import {View, StyleSheet, Text , TouchableOpacity} from 'react-native';
  import {RandomNumber} from '../helpers/randomNumber';
- // import Timer from '../childComponents/Timer'
  import {changeOptionsStructure} from '../helpers/changeOptionsStructure';
- //import { Icon } from 'react-native-elements'
  import CountDown from 'react-native-countdown-component';
  
  const App = ({route, navigation}) => {
-   console.log("route.params'';", route.params);
    const type = route.params.type.toUpperCase() || 'ADD';
-   console.log('type: ', type);
    const [selectedIndex, setSelectedIndex] = useState('');
    const [selectedAnswer, setSelectedAnswer] = useState('');
    const [options, setOptions] = useState(null);
@@ -46,6 +42,7 @@
          correctAnswer = firstNumb * secondNum;
        } else if (type === 'DIVIDE') {
          correctAnswer = firstNumb / secondNum;
+         correctAnswer = correctAnswer.toFixed(2);
        }
        setFirstNum(firstNumb);
        setSecondNum(secondNum);
@@ -60,7 +57,6 @@
    });
  
    const changeState = () => {
-       console.log('until ==> ', until);
      if (until == 10) {
        setUntil(9);
      } else {
@@ -76,7 +72,6 @@
      } else {
        setWrongAnswer(wrongAnswer + 1);
      }
-     changeState();
     //  console.log('colorIndex: ----------------- ', colorIndex);
     //  console.log('colors.length: ', colors.length);
     //  if(colorIndex === colors.length){
@@ -84,6 +79,8 @@
     //     setColorIndex(0)
     // }
      setTimeout(() => {
+        changeState();
+
        setSelectedIndex(null);
        setFirstNum(null);
        setSecondNum(null);
@@ -105,8 +102,7 @@
      setOptions(unFlatten);
    };
    const afterFinishCounter = () => {
-   console.log("inside after finish time");
-    // setFinishTime(true);
+     setFinishTime(true);
     // selectAnswer(null , null)
  
    };
@@ -130,11 +126,7 @@
    }
  
   let totalLengthColors = colors.length
-  let bgColor = totalLengthColors - colorIndex
-  //console.log('bgColor: ', bgColor);
-
-  console.log('bgColor: ', bgColor);
-  console.log('colors[bgColor]: ', colors[colorIndex]);
+ 
  
    return (
      // firstNum &&
@@ -158,8 +150,8 @@
          />
        </View>
        {finishTime ? (
-        <View style={styles.TryAgainContainer}>
-         <Text style={styles.TimeOutText}> TIME OUT </Text>
+        <View style={{...styles.TryAgainContainer ,  backgroundColor:colors[colorIndex]}}>
+         <Text style={styles.TimeOutText}>  TIME OUT </Text>
          <TouchableOpacity onPress={((e)=>startAgain())}><Text style={styles.TryAgainText}>Try Again </Text></TouchableOpacity>
          </View>
        ) : (
