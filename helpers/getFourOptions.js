@@ -4,8 +4,7 @@ function hasDecimal (num) {
 }
 
 export function getFourOptions (rightAnswer){
-    console.log("inside get four Options bab");
-    console.log('rightAnswer: ', rightAnswer);
+
     const one = RandomNumber(1, 10);
     const two = RandomNumber(1, 10);
     const three = RandomNumber(1, 10);
