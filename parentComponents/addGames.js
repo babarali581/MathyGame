@@ -31,7 +31,8 @@
    const [seconds, setSeconds] = useState(10);
    const [until, setUntil] = useState(null);
    const [finishTime, setFinishTime] = useState(false);
- 
+   const [colorIndex, setColorIndex] = useState(1);
+   const [colors , setColors] = useState(["#AC2A2A" , "#852AAC" , '#1259FF' , "#B22222"]);
    useEffect(() => {
      if (options === null) {
        const firstNumb = RandomNumber(1, 10);
@@ -76,13 +77,26 @@
        setWrongAnswer(wrongAnswer + 1);
      }
      changeState();
+    //  console.log('colorIndex: ----------------- ', colorIndex);
+    //  console.log('colors.length: ', colors.length);
+    //  if(colorIndex === colors.length){
+    //      console.log("000000");
+    //     setColorIndex(0)
+    // }
      setTimeout(() => {
        setSelectedIndex(null);
        setFirstNum(null);
        setSecondNum(null);
        setOptions(null);
        setAttemptedQuestions(attemptedQuestions + 1);
+       if(colorIndex + 1 === colors.length){
+       setColorIndex(0)
+   }else{
+       setColorIndex(colorIndex + 1)
+   }
      }, 1000);
+
+    
    };
  
    const getSetOfAnswers = rightAnswer => {
@@ -115,11 +129,17 @@
      sign = '/';
    }
  
+  let totalLengthColors = colors.length
+  let bgColor = totalLengthColors - colorIndex
+  //console.log('bgColor: ', bgColor);
 
+  console.log('bgColor: ', bgColor);
+  console.log('colors[bgColor]: ', colors[colorIndex]);
+ 
    return (
      // firstNum &&
      // secondNum && (
-     <View style={styles.container}>
+     <View style={{...styles.container , backgroundColor:colors[colorIndex]}}>
        <Text style={styles.headingText}>
          {attemptedQuestions}/{totalQuestions}
        </Text>
@@ -130,8 +150,8 @@
            //until={0}
            onFinish={() => afterFinishCounter() }   //selectAnswer(null , null)
  
-           digitStyle={{backgroundColor: '#FFF'}}
-           digitTxtStyle={{color: '#1CC625'}}
+           digitStyle={{backgroundColor: colors[colorIndex]}}
+          // digitTxtStyle={{color: '#1CC625'}}
            timeToShow={['S']}
            timeLabels={{s: ''}}
            // running= {checkRun}
@@ -143,13 +163,19 @@
          <TouchableOpacity onPress={((e)=>startAgain())}><Text style={styles.TryAgainText}>Try Again </Text></TouchableOpacity>
          </View>
        ) : (
-         <View>
+         <View >
            <View style={styles.rightWrong}>
-             <Text style={styles.rightCount}>Right</Text>
-             <Text style={styles.rightWrongCount}> {rightAnswer}</Text>
+            <View style= {{flexDirection: 'row'}}>
+               <Text style={styles.rightCount}>Right</Text>
+               <Text style={styles.rightWrongCount}> {rightAnswer}</Text>
+            </View>
+            <View style= {{flexDirection: 'row'}}>
+
              <Text style={styles.wrongCount}>Wrong</Text>
- 
              <Text style={styles.rightWrongCount}>{wrongAnswer}</Text>
+            
+             </View>
+
            </View>
            <Text style={styles.questionText}>
              {firstNum} {sign} {secondNum}
@@ -218,7 +244,7 @@
  
  const styles = StyleSheet.create({
    container: {
-     backgroundColor: 'lightblue', //'#B4D2D7',
+    // backgroundColor: colors[0],//"#FF6666",//'lightblue', //'#B4D2D7',
      height: '100%',
      width: '100%',
    },
@@ -231,13 +257,13 @@
    input: {
      height: 40,
      margin: 12,
-     borderWidth: 1,
+     borderWidth: 0,
      padding: 10,
    },
  
    mainText: {
      flexDirection: 'row',
-     borderWidth: 1,
+     borderWidth: 0,
      display: 'flex',
      height: '20%',
    },
@@ -245,17 +271,18 @@
      width: '50%',
      borderWidth: 0.5,
      backgroundColor: 'white',
+     backgroundColor: '#24a0ed'
    },
    correctAnswer: {
      backgroundColor: 'green',
      width: '50%',
-     borderWidth: 0.5,
+  //   borderWidth: 0.5,
    },
    wrongAnswer: {
      backgroundColor: 'red',
      width: '50%',
      textAlign: 'center',
-     borderWidth: 0.5,
+  //   borderWidth: 0.5,
    },
    questionText: {
      marginTop: '50%',
@@ -276,21 +303,21 @@
    },
    rightWrong: {
      display: 'flex',
-     borderWidth: 5,
-     flexDirection: 'row',
+    // borderWidth: 5,
+     flexDirection: 'column',
    },
  
    rightCount: {
      //    width: "50%",
      textAlign: 'left',
-     color: 'green',
+     color: 'white',
      fontSize: 22,
    },
    wrongCount: {
      //  width: "10%",
      textAlign: 'left',
-     color: 'red',
-     marginLeft: '2%',
+     color: 'white',
+    // marginLeft: '2%',
      fontSize: 22,
    },
  
