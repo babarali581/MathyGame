@@ -126,8 +126,11 @@ const App = ({route, navigation}) => {
     setOptions(unFlatten);
   };
   const afterFinishCounter = () => {
-   // setFinishTime(true);
-    // selectAnswer(null , null)
+    // setFinishTime(true);
+
+    setAttemptedQuestions(0)
+    setRightAnswer(0)
+    setWrongAnswer(0)
   };
   const startAgain = () => {
     setSelectedIndex(null);
@@ -191,10 +194,11 @@ const App = ({route, navigation}) => {
               <Text style={styles.rightWrongCount}>{wrongAnswer}</Text>
             </View>
           </View>
+          <View style= {styles.question}>
           <Text style={styles.questionText}>
             {firstNum} {sign} {secondNum}
           </Text>
-
+          </View>
           {options &&
             options.map((twoValues, i) => {
               return (
@@ -255,6 +259,9 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     width: '100%',
+    borderWidth: 6,
+    borderColor: 'white'
+
    
   },
   bigBlue: {
@@ -279,7 +286,8 @@ const styles = StyleSheet.create({
   halfDiv: {
     width: '50%',
     borderWidth: 0.5,
-    backgroundColor: 'white',
+    borderColor: "white",
+  //  backgroundColor: 'white',
     backgroundColor: '#24a0ed',
     justifyContent: 'center',
     alignItems: 'center',
@@ -305,16 +313,20 @@ const styles = StyleSheet.create({
   questionText: {
     marginTop: '0%',
     textAlign: 'center',
-    fontSize: 28,
+    fontSize: 58,
     color: 'white',
 
+  },
+  question : {
+    height: "20%"
   },
   headingText: {
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 18,
     marginTop: 0,
-    backgroundColor: 'yellow',
+    color : "white",
+    backgroundColor: "black"//'yellow',
   },
   textToCenter: {
     textAlign: 'center',
