@@ -15,6 +15,7 @@ const Home = ({ navigation }) => {
 let upperValues =  upperPosition.map((e , i)=>{
 
     return (
+
         <TouchableOpacity onPress={()=> navigation.navigate('Game',{type : e})} key={i} style={{...styles.eachOptions ,backgroundColor: lightColors[i]}}><Text >{e}</Text></TouchableOpacity>
 
     )
@@ -23,6 +24,7 @@ let upperValues =  upperPosition.map((e , i)=>{
   let lowerValues =  lowerPosition.map((e ,i)=>{
 
     return (
+       
         <TouchableOpacity onPress={()=> navigation.navigate('Game',{type : e})} key={i} style={{...styles.eachOptions ,backgroundColor: lightColors[i+2]}} ><Text>{e}</Text></TouchableOpacity>
 
     )
@@ -55,6 +57,7 @@ const styles = StyleSheet.create({
      flexDirection: 'row',
      height: "30%",
 
+
     },
     eachOptions: {
 
@@ -62,7 +65,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         border: "4px solid black",
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderRadius:25
+
     }
 
 
