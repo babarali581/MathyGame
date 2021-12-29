@@ -43,11 +43,9 @@ export function getFourOptions(rightAnswer) {
       for (let i = 0; i < checkMinlengthOfExtraNumb; i++) {
         eachNumb = `${eachNumb}${setOfNums[i]}`;
       }
-      console.log('eachNumb: ', eachNumb);
     }
     return eachNumb
   });
 
-  console.log('finalResp: ', finalResp);
   return finalResp;
 }

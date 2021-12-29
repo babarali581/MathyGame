@@ -34,11 +34,10 @@ const App = ({route, navigation}) => {
     '#EA13DD',
     '#D35400',
     '#F4D03F',
-    "#9B59B6",
-    "#40E0D0"
+    '#9B59B6',
+    '#40E0D0',
   ]);
   useEffect(() => {
-
     if (options === null) {
       const firstNumb = RandomNumber(1, 10);
       const secondNum = RandomNumber(1, 10);
@@ -60,27 +59,11 @@ const App = ({route, navigation}) => {
       if (until == 10) {
         setUntil(9);
       }
-      // changeState();
     }
   });
 
-  const resetGame = () => {
-    setTotalQuestions(0);
-    setAttemptedQuestions(0);
-    setRightAnswer(0);
-    setWrongAnswer(0);
-    setSelectedIndex(null);
-    setFirstNum(null);
-    setSecondNum(null);
-    setOptions(null);
-
-    if (colorIndex + 1 === colors.length) {
-      setColorIndex(0);
-    } else {
-      setColorIndex(colorIndex + 1);
-    }
-  };
   const changeState = () => {
+    console.log('inside change state');
     if (until == 10) {
       setUntil(9);
     } else {
@@ -93,40 +76,37 @@ const App = ({route, navigation}) => {
 
     if (selectAnswer === correctAnswer) {
       setRightAnswer(rightAnswer + 1);
+    } else if (userSelectedIndex === 'LAST') {
+      setFinishTime(true);
+
+      setAttemptedQuestions(0);
+      setUntil(0);
     } else {
       setWrongAnswer(wrongAnswer + 1);
     }
 
- 
-    if (totalQuestions - 1 < attemptedQuestions) {
-         
-        setFinishTime(true);
+    if (totalQuestions - 1 <= attemptedQuestions) {
+      setFinishTime(true);
 
-      //  setTotalQuestions(0);
-        setAttemptedQuestions(0);
-        setUntil(0)
-
-        // setRightAnswer(0);
-        // setWrongAnswer(0);
-        //changeState();
-
-
+      setAttemptedQuestions(0);
+      setUntil(0);
     } else {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (userSelectedIndex !== 'LAST') {
           changeState();
-          setSelectedIndex(null);
-          setFirstNum(null);
-          setSecondNum(null);
-          setOptions(null);
-          setAttemptedQuestions(attemptedQuestions + 1);
-          if (colorIndex + 1 === colors.length) {
-            setColorIndex(0);
-          } else {
-            setColorIndex(colorIndex + 1);
-          }
-        }, 100);
-   }
-
+        }
+        setSelectedIndex(null);
+        setFirstNum(null);
+        setSecondNum(null);
+        setOptions(null);
+        setAttemptedQuestions(attemptedQuestions + 1);
+        if (colorIndex + 1 === colors.length) {
+          setColorIndex(0);
+        } else {
+          setColorIndex(colorIndex + 1);
+        }
+      }, 100);
+    }
   };
 
   const getSetOfAnswers = rightAnswer => {
@@ -135,17 +115,11 @@ const App = ({route, navigation}) => {
     setOptions(unFlatten);
   };
   const afterFinishCounter = () => {
-
-    if (totalQuestions -1 < attemptedQuestions  ) {
-
-      selectAnswer(null , null)
-
+    if (totalQuestions == 10 && attemptedQuestions == 9) {
+      selectAnswer('LAST', null);
+    } else {
+      selectAnswer(null, null);
     }
-    //  setFinishTime(true);
-
-    // setAttemptedQuestions(0)
-    // setRightAnswer(0)
-    // setWrongAnswer(0)
   };
   const startAgain = () => {
     setSelectedIndex(null);
@@ -153,9 +127,9 @@ const App = ({route, navigation}) => {
     setSecondNum(null);
     setOptions(null);
     setFinishTime(false);
-    setRightAnswer(0)
-    setWrongAnswer(0)
-    setAttemptedQuestions(0)
+    setRightAnswer(0);
+    setWrongAnswer(0);
+    setAttemptedQuestions(0);
     changeState();
   };
   let sign = '';
@@ -168,11 +142,14 @@ const App = ({route, navigation}) => {
   } else if (type === 'DIVIDE') {
     sign = '/';
   }
-  let checkIfPass = rightAnswer < totalQuestions * 80/100 ? "Fail" : "PASS"
-  let bgColorOfTryAgain =  checkIfPass == "PASS" ? "green" : "red"
+  let checkIfPass = rightAnswer < (totalQuestions * 80) / 100 ? 'FAIL' : 'PASS';
+  let bgColorOfTryAgain = checkIfPass == 'PASS' ? 'green' : 'red';
   return (
-    
-    <View style={{...styles.container, backgroundColor: !finishTime ?colors[colorIndex] : "black"}}>
+    <View
+      style={{
+        ...styles.container,
+        backgroundColor: !finishTime ? colors[colorIndex] : 'black',
+      }}>
       <Text style={styles.headingText}>
         {attemptedQuestions}/{totalQuestions}
       </Text>
@@ -182,49 +159,55 @@ const App = ({route, navigation}) => {
           size={20}
           //until={0}
           onFinish={() => afterFinishCounter()} //selectAnswer(null , null)
-          digitStyle={{backgroundColor: !finishTime ?colors[colorIndex] : "black"}}
+          digitStyle={{
+            backgroundColor: !finishTime ? colors[colorIndex] : 'black',
+          }}
           // digitTxtStyle={{color: '#1CC625'}}
           timeToShow={['S']}
           timeLabels={{s: ''}}
           // running= {checkRun}
         />
-      </View >
+      </View>
       {finishTime ? (
-        
-        <View style={styles.parentTryAgain }>
-                    <Text style={styles.TryAgainText}> 80% Required To Pass </Text>
+        <View style={styles.parentTryAgain}>
+          <Text style={styles.TryAgainText}> 80% Required To Pass </Text>
 
-        <View
-          style={{
-            ...styles.TryAgainContainer,
-           backgroundColor :bgColorOfTryAgain
-          }}>
-          <Text style={styles.TimeOutText}> Status {rightAnswer < totalQuestions * 80/100 ? "Fail" : "PASS"}</Text>
-          <Text style={styles.TimeOutText}> Total {rightAnswer + wrongAnswer}</Text>
-          <Text style={styles.TimeOutText}> Right {rightAnswer}</Text>
-          <Text style={styles.TimeOutText}> Wrong {wrongAnswer}</Text>
+          <View
+            style={{
+              ...styles.TryAgainContainer,
+              backgroundColor: bgColorOfTryAgain,
+            }}>
+            <Text style={styles.TimeOutText}>
+              {' '}
+              {rightAnswer < (totalQuestions * 80) / 100 ? 'Fail' : 'PASS'}
+            </Text>
+            <Text style={styles.TimeOutText}>
+              {' '}
+              Total {rightAnswer + wrongAnswer}
+            </Text>
+            <Text style={styles.TimeOutText}> Right {rightAnswer}</Text>
+            <Text style={styles.TimeOutText}> Wrong {wrongAnswer}</Text>
+          </View>
           <TouchableOpacity onPress={e => startAgain()}>
             <Text style={styles.TryAgainText}>Start Again </Text>
           </TouchableOpacity>
         </View>
-        </View>
-
       ) : (
         <View>
           <View style={styles.rightWrong}>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.rightCount}>Right</Text>
-              <Text style={styles.rightWrongCount}>  {rightAnswer}</Text>
+              <Text style={styles.rightWrongCount}> {rightAnswer}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.wrongCount}>Wrong</Text>
               <Text style={styles.rightWrongCount}> {wrongAnswer}</Text>
             </View>
           </View>
-          <View style= {styles.question}>
-          <Text style={styles.questionText}>
-            {firstNum} {sign} {secondNum}
-          </Text>
+          <View style={styles.question}>
+            <Text style={styles.questionText}>
+              {firstNum} {sign} {secondNum}
+            </Text>
           </View>
           {options &&
             options.map((twoValues, i) => {
@@ -262,12 +245,7 @@ const App = ({route, navigation}) => {
                           key={j}
                           style={styles.halfDiv}
                           onPress={() => selectAnswer(`${i}${j}`, each)}>
-                          <Text
-                            style={styles.textToCenter}
-                            //onPress={() => selectAnswer(`${i}${j}`, each)}
-                          >
-                            {each}
-                          </Text>
+                          <Text style={styles.textToCenter}>{each}</Text>
                         </TouchableOpacity>
                       );
                     }
@@ -288,7 +266,6 @@ const styles = StyleSheet.create({
     width: '100%',
     borderWidth: 6,
     borderColor: 'white',
-
   },
   bigBlue: {
     color: 'blue',
@@ -312,22 +289,19 @@ const styles = StyleSheet.create({
   halfDiv: {
     width: '50%',
     borderWidth: 0.5,
-    borderColor: "white",
+    borderColor: 'white',
     backgroundColor: '#24a0ed',
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
-    borderRadius: 50
-
-
+    borderRadius: 50,
   },
   correctAnswer: {
     backgroundColor: 'green',
     width: '50%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 50
-
+    borderRadius: 50,
 
     //   borderWidth: 0.5,
   },
@@ -336,8 +310,8 @@ const styles = StyleSheet.create({
     width: '50%',
     textAlign: 'center',
     justifyContent: 'center',
-     alignItems: 'center',
-     borderRadius: 50
+    alignItems: 'center',
+    borderRadius: 50,
 
     //   borderWidth: 0.5,
   },
@@ -346,18 +320,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 58,
     color: 'white',
-
   },
-  question : {
-    height: "20%"
+  question: {
+    height: '20%',
   },
   headingText: {
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 18,
     marginTop: 0,
-    color : "white",
-    backgroundColor: "black"//'yellow',
+    color: 'white',
+    backgroundColor: 'black', //'yellow',
   },
   textToCenter: {
     textAlign: 'center',
@@ -372,14 +345,13 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'white',
     fontSize: 22,
-    marginLeft: 5
+    marginLeft: 5,
   },
   wrongCount: {
     textAlign: 'left',
     color: 'white',
     fontSize: 22,
-    marginLeft: 5
-
+    marginLeft: 5,
   },
 
   iconColor: {
@@ -390,24 +362,22 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   TryAgainContainer: {
-    height: '70%',
-  //  width: '70%',
-  padding: 20,
+    //  width: '70%',
+    padding: 40,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 22,
     borderColor: 'black',
-    borderRadius: 1000
+    borderRadius: 1000,
   },
   parentTryAgain: {
-//backgroundColor: 'black',
+    //backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
     height: '100%',
     width: '100%',
-
   },
   TimeOutText: {
     fontSize: 40,
@@ -418,7 +388,7 @@ const styles = StyleSheet.create({
   TryAgainText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color : 'white'
+    color: 'white',
   },
 });
 
