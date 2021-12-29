@@ -15,13 +15,13 @@ $ npx react-native run-android
 
 
 
-```bash
-Here is the deployed version of this App 
 
-https://play.google.com/store/apps/details?id=com.mathgame5
+## Here is the deployed version of this App 
+
+ https://play.google.com/store/apps/details?id=com.mathgame5
 
 
-```
+
 
 ## Contribute
 
